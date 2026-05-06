@@ -19,7 +19,7 @@ struct RenderCommand {
 		TextDC
 	} StoredValueType;
 
-	Batch* Batch;
+	Batch* BatchObj;
 
 	unsigned int IssuedZLayer;
 };

@@ -4,9 +4,15 @@
 
 #include <print>
 
+#ifdef _MSC_VER
+    #define SORT_STABLE(range, comp) std::ranges::stable_sort(range, comp)
+#else
+    #define SORT_STABLE(range, comp) std::stable_sort(std::begin(range), std::end(range), comp)
+#endif
+
 void Engine2D::PreInit() {
 	if (!GLFWInitialisation()) {
-		throw new std::exception("idk bro");
+		throw new std::exception();
 	}
 
 	m_Renderer = Renderer2D(
@@ -84,7 +90,7 @@ void Engine2D::QueueBatchesToRenderer(
 
 	GetRenderer().Draw(GetResourceService().GetUIBatch(), 0, 0, 0, nullptr);
 	
-	std::ranges::stable_sort(gameLoopRetVal.RenderCommands, [](const RenderCommand& a, const RenderCommand& b) {
+	SORT_STABLE(gameLoopRetVal.RenderCommands, [](const RenderCommand& a, const RenderCommand& b) {
 		return a.IssuedZLayer < b.IssuedZLayer;
 	});
 
@@ -93,7 +99,7 @@ void Engine2D::QueueBatchesToRenderer(
 		float calculatedZcoord = nearZ + i * layerStep + 2.f;
 		switch (rCommand.StoredValueType) {
 			case RenderCommand::Type::FBatchDC: {
-				GetRenderer().Draw(rCommand.Batch, 0, 0, calculatedZcoord, nullptr);
+				GetRenderer().Draw(rCommand.BatchObj, 0, 0, calculatedZcoord, nullptr);
 				break;
 			}
 		}

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../common/common.h"
+#include "../common/common.h"
 
 //	Instance-related primitive structs for sets of data
 

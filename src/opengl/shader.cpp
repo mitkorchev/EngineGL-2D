@@ -10,10 +10,9 @@ struct ShaderProgramSources {
 
 static ShaderProgramSources ParseShader(const std::string& filepath) {
     std::ifstream stream(filepath);
-
     DEBUG_ASSERT(stream.is_open(), "Failed to open shader file: %s", filepath.c_str())
 
-        enum class ShaderType {
+    enum class ShaderType {
         NONE = -1, VERTEX = 0, FRAGMENT = 1
     };
 

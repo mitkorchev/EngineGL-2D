@@ -54,11 +54,11 @@ struct FontLoadingParameters {
 	FontLoadingParameters(
 		const char* fontName,
 		const char* fontFileLocation,
-		bool loadInUIsheet = false
+		bool loadInUIsheetArg = false
 	) :
 		location(fontFileLocation),
 		name(fontName),
-		loadInUISheet(loadInUISheet)
+		loadInUISheet(loadInUIsheetArg)
 	{}
 };
 

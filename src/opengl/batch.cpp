@@ -24,21 +24,21 @@ SpriteInformation::SpriteInformation(
 }
 
 uint32_t SpriteInformation::GetSheetIndex() const {
-	return (data & 0x3F000000ui32) >> 24;
+	return (data & 0x3F000000) >> 24;
 }
 
 uint32_t SpriteInformation::GetSpriteIndex() const {
-	return data & 0x00FFFFFFui32;
+	return data & 0x00FFFFFF;
 }
 
 void SpriteInformation::SetSheetIndex(uint32_t sheetIndex) {
-	data &= 0xC0FFFFFFui32;
+	data &= 0xC0FFFFFF;
 	data |= (sheetIndex & 0x3F) << 24;
 }
 
 void SpriteInformation::SetSpriteIndex(uint32_t spriteIndex) {
-	data &= 0xFF000000ui32;
-	data |= (spriteIndex & 0x00FFFFFFui32);
+	data &= 0xFF000000;
+	data |= (spriteIndex & 0x00FFFFFF);
 }
 
 void SpriteInformation::SetXCutoff(bool fromLeft) {
@@ -60,7 +60,7 @@ void SpriteInformation::SetYCutoff(bool fromTop) {
 }
 
 unsigned short SpriteInstance::PackRemainFactor(float remainFactor) {
-	return 65535ui16 * remainFactor;
+	return 65535 * remainFactor;
 }
 
 void SpriteInstance::SetXCut(float remainFactor, bool cutFromLeft) {

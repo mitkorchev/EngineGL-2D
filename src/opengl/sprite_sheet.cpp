@@ -1,7 +1,7 @@
 #include "sprite_sheet.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "../dependancies/stb_image.h"
+#include <stb_image.h>
 
 #include <fstream>
 #include <filesystem>
@@ -300,11 +300,10 @@ void SpriteSheet::LoadImageInTexture(
 		&nChannels,
 		4
 	);
-
 	if (!imageData) {
 		// unfixable, crash here
 		std::cout << stbi_failure_reason();
-		throw std::exception(stbi_failure_reason());
+		throw std::runtime_error(stbi_failure_reason());
 	}
 
 	glGenTextures(1, &m_TextureBufferID);

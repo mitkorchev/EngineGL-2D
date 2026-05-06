@@ -7,13 +7,19 @@ project(EngineGL2D LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(glfw3 CONFIG REQUIRED)
 find_package(GLEW CONFIG REQUIRED)
+#   Since this is header-only, it can't be downloaded automatically through here.
+#find_package(stb CONFIG REQUIRED)
 
-add_executable(Engine
-    src/main.cpp
+file(GLOB_RECURSE SOURCES
+    main.cpp
+    src/*.cpp
 )
+
+add_executable(Engine ${SOURCES})
 
 target_link_libraries(Engine PRIVATE
     glfw

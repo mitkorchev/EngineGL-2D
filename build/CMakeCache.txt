@@ -20,14 +20,12 @@ CMAKE_ADDR2LINE:FILEPATH=/usr/bin/addr2line
 //Path to a program.
 CMAKE_AR:FILEPATH=/usr/bin/ar
 
-//No help, variable specified on the command line.
+//Choose the type of build, options are: None Debug Release RelWithDebInfo
+// MinSizeRel ...
 CMAKE_BUILD_TYPE:STRING=Debug
 
-//Enable/Disable color output during build.
-CMAKE_COLOR_MAKEFILE:BOOL=ON
-
 //CXX compiler
-CMAKE_CXX_COMPILER:STRING=/usr/bin/g++
+CMAKE_CXX_COMPILER:FILEPATH=/usr/bin/c++
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
@@ -52,9 +50,6 @@ CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 //Flags used by the CXX compiler during RELWITHDEBINFO builds.
 CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 
-//No help, variable specified on the command line.
-CMAKE_C_COMPILER:FILEPATH=/usr/bin/gcc
-
 //Path to a program.
 CMAKE_DLLTOOL:FILEPATH=CMAKE_DLLTOOL-NOTFOUND
 
@@ -73,6 +68,9 @@ CMAKE_EXE_LINKER_FLAGS_RELEASE:STRING=
 //Flags used by the linker during RELWITHDEBINFO builds.
 CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
+//Enable/Disable output of build database during the build.
+CMAKE_EXPORT_BUILD_DATABASE:BOOL=
+
 //No help, variable specified on the command line.
 CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE
 
@@ -85,8 +83,8 @@ CMAKE_INSTALL_PREFIX:PATH=/usr/local
 //Path to a program.
 CMAKE_LINKER:FILEPATH=/usr/bin/ld
 
-//Path to a program.
-CMAKE_MAKE_PROGRAM:FILEPATH=/usr/bin/gmake
+//Program used to build from build.ninja files.
+CMAKE_MAKE_PROGRAM:FILEPATH=/usr/bin/ninja
 
 //Flags used by the linker during the creation of modules during
 // all build types.
@@ -185,8 +183,7 @@ CMAKE_STRIP:FILEPATH=/usr/bin/strip
 //Path to a program.
 CMAKE_TAPI:FILEPATH=CMAKE_TAPI-NOTFOUND
 
-//The CMake toolchain file
-CMAKE_TOOLCHAIN_FILE:FILEPATH=/home/dimkorchev/vcpkg/scripts/buildsystems/vcpkg.cmake
+CMAKE_TOOLCHAIN_FILE:STRING=/home/dimkorchev/vcpkg/scripts/buildsystems/vcpkg.cmake
 
 //If this value is on, makefiles will be generated without the
 // .SILENT directive, and all commands will be echoed to the console
@@ -204,16 +201,16 @@ EngineGL2D_IS_TOP_LEVEL:STATIC=ON
 EngineGL2D_SOURCE_DIR:STATIC=/home/dimkorchev/Плот/code/OpenGl-2D-Renderer-Revamped
 
 //The directory containing a CMake configuration file for GLEW.
-GLEW_DIR:PATH=/home/dimkorchev/vcpkg/installed/x64-linux/share/glew
+GLEW_DIR:PATH=/home/dimkorchev/Плот/code/OpenGl-2D-Renderer-Revamped/build/vcpkg_installed/x64-linux/share/glew
 
 //Path to a file.
-OPENGL_EGL_INCLUDE_DIR:PATH=/home/dimkorchev/vcpkg/installed/x64-linux/include
+OPENGL_EGL_INCLUDE_DIR:PATH=/home/dimkorchev/Плот/code/OpenGl-2D-Renderer-Revamped/build/vcpkg_installed/x64-linux/include
 
 //Path to a file.
-OPENGL_GLES2_INCLUDE_DIR:PATH=/home/dimkorchev/vcpkg/installed/x64-linux/include
+OPENGL_GLES2_INCLUDE_DIR:PATH=/home/dimkorchev/Плот/code/OpenGl-2D-Renderer-Revamped/build/vcpkg_installed/x64-linux/include
 
 //Path to a file.
-OPENGL_GLES3_INCLUDE_DIR:PATH=/home/dimkorchev/vcpkg/installed/x64-linux/include
+OPENGL_GLES3_INCLUDE_DIR:PATH=/home/dimkorchev/Плот/code/OpenGl-2D-Renderer-Revamped/build/vcpkg_installed/x64-linux/include
 
 //Path to a file.
 OPENGL_GLU_INCLUDE_DIR:PATH=/usr/include
@@ -249,15 +246,34 @@ OPENGL_xmesa_INCLUDE_DIR:PATH=OPENGL_xmesa_INCLUDE_DIR-NOTFOUND
 // executables.
 VCPKG_APPLOCAL_DEPS:BOOL=ON
 
+//Additional options to bootstrap vcpkg
+VCPKG_BOOTSTRAP_OPTIONS:STRING=
+
 //The directory which contains the installed libraries for each
 // triplet
-VCPKG_INSTALLED_DIR:PATH=/home/dimkorchev/vcpkg/installed
+VCPKG_INSTALLED_DIR:PATH=/home/dimkorchev/Плот/code/OpenGl-2D-Renderer-Revamped/build/vcpkg_installed
+
+//Additional install options to pass to vcpkg
+VCPKG_INSTALL_OPTIONS:STRING=
 
 //The path to the vcpkg manifest directory.
-VCPKG_MANIFEST_DIR:PATH=
+VCPKG_MANIFEST_DIR:PATH=/home/dimkorchev/Плот/code/OpenGl-2D-Renderer-Revamped
+
+//Install the dependencies listed in your manifest:
+//\n    If this is off, you will have to manually install your dependencies.
+//\n    See https://github.com/microsoft/vcpkg/tree/master/docs/specifications/manifests.md
+// for more info.
+//\n
+VCPKG_MANIFEST_INSTALL:BOOL=ON
 
 //Use manifest mode, as opposed to classic mode.
-VCPKG_MANIFEST_MODE:BOOL=OFF
+VCPKG_MANIFEST_MODE:BOOL=ON
+
+//Overlay ports to use for vcpkg install in manifest mode
+VCPKG_OVERLAY_PORTS:STRING=
+
+//Overlay triplets to use for vcpkg install in manifest mode
+VCPKG_OVERLAY_TRIPLETS:STRING=
 
 //Appends the vcpkg paths to CMAKE_PREFIX_PATH, CMAKE_LIBRARY_PATH
 // and CMAKE_FIND_ROOT_PATH so that vcpkg libraries/packages are
@@ -286,10 +302,13 @@ X_VCPKG_APPLOCAL_DEPS_SERIALIZED:BOOL=OFF
 
 //The directory which contains the installed libraries for each
 // triplet
-_VCPKG_INSTALLED_DIR:PATH=/home/dimkorchev/vcpkg/installed
+_VCPKG_INSTALLED_DIR:PATH=/home/dimkorchev/Плот/code/OpenGl-2D-Renderer-Revamped/build/vcpkg_installed
 
 //The directory containing a CMake configuration file for glfw3.
-glfw3_DIR:PATH=/home/dimkorchev/vcpkg/installed/x64-linux/share/glfw3
+glfw3_DIR:PATH=/home/dimkorchev/Плот/code/OpenGl-2D-Renderer-Revamped/build/vcpkg_installed/x64-linux/share/glfw3
+
+//The directory containing a CMake configuration file for stb.
+stb_DIR:PATH=stb_DIR-NOTFOUND
 
 
 ########################
@@ -308,8 +327,6 @@ CMAKE_CACHE_MAJOR_VERSION:INTERNAL=3
 CMAKE_CACHE_MINOR_VERSION:INTERNAL=31
 //Patch version of cmake used to create the current loaded cache
 CMAKE_CACHE_PATCH_VERSION:INTERNAL=6
-//ADVANCED property for variable: CMAKE_COLOR_MAKEFILE
-CMAKE_COLOR_MAKEFILE-ADVANCED:INTERNAL=1
 //Path to CMake executable.
 CMAKE_COMMAND:INTERNAL=/usr/bin/cmake
 //Path to cpack program executable.
@@ -346,10 +363,12 @@ CMAKE_EXE_LINKER_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
 CMAKE_EXE_LINKER_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO
 CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_EXPORT_BUILD_DATABASE
+CMAKE_EXPORT_BUILD_DATABASE-ADVANCED:INTERNAL=1
 //Name of external makefile project generator.
 CMAKE_EXTRA_GENERATOR:INTERNAL=
 //Name of generator.
-CMAKE_GENERATOR:INTERNAL=Unix Makefiles
+CMAKE_GENERATOR:INTERNAL=Ninja
 //Generator instance identifier.
 CMAKE_GENERATOR_INSTANCE:INTERNAL=
 //Name of generator platform.
@@ -457,16 +476,10 @@ OPENGL_glx_LIBRARY-ADVANCED:INTERNAL=1
 OPENGL_opengl_LIBRARY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: OPENGL_xmesa_INCLUDE_DIR
 OPENGL_xmesa_INCLUDE_DIR-ADVANCED:INTERNAL=1
-//Install the dependencies listed in your manifest:
-//\n    If this is off, you will have to manually install your dependencies.
-//\n    See https://github.com/microsoft/vcpkg/tree/master/docs/specifications/manifests.md
-// for more info.
-//\n
-VCPKG_MANIFEST_INSTALL:INTERNAL=OFF
 //ADVANCED property for variable: VCPKG_VERBOSE
 VCPKG_VERBOSE-ADVANCED:INTERNAL=1
 //Making sure VCPKG_MANIFEST_MODE doesn't change
-Z_VCPKG_CHECK_MANIFEST_MODE:INTERNAL=OFF
+Z_VCPKG_CHECK_MANIFEST_MODE:INTERNAL=ON
 //Vcpkg root directory
 Z_VCPKG_ROOT_DIR:INTERNAL=/home/dimkorchev/vcpkg
 //linker supports push/pop state

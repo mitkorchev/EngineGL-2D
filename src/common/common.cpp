@@ -43,7 +43,7 @@ void CheckGLErrors(const char* context) {
 		case GL_INVALID_FRAMEBUFFER_OPERATION:	errorStr = "GL_INVALID_FRAMEBUFFER_OPERATION"; break;
 		}
 		std::cerr << "[OpenGL Error] (" << errorStr << ") in context: " << context << std::endl;
-		__debugbreak();
+		DEBUG_BREAK();
 	}
 }
 

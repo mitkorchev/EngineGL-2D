@@ -13,15 +13,14 @@ These include:
 
 // -- PROJECT SETTINGS -- //
 
+#ifndef GLEW_STATIC
 #define GLEW_STATIC
-
+#endif
 
 #define DEBUG__CODE 1           // use for debug-build-only code snippets
 #define DEBUG__ALLOW_ASSERTS 1
 
 // -- END PROJECT SETTINGS -- //
-
-
 
 #include <cmath>
 #include <cstdio>
@@ -32,17 +31,24 @@ These include:
 #include <filesystem>
 #include <format>
 
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
-#include "../dependancies/GL/glew.h"
-#include "../dependancies/GLFW/glfw3.h"
-
-#include "../dependancies/glm/glm.hpp"
-#include "../dependancies/glm/gtc/matrix_transform.hpp"
-#include "../dependancies/glm/gtc/type_ptr.hpp"
-
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "io_util.h"
 
+
+#if defined(_MSC_VER)
+    #define DEBUG_BREAK() DEBUG_BREAK()
+#elif defined(__GNUC__) || defined(__clang__)
+    #define DEBUG_BREAK() __builtin_trap()
+#else
+    #include <csignal>
+    #define DEBUG_BREAK() std::raise(SIGTRAP)
+#endif
 
 
 namespace fs = std::filesystem;
@@ -56,7 +62,7 @@ namespace fs = std::filesystem;
 __debug_variant
 
 
-#define BREAK_IF(cond_) if (cond_) __debugbreak();
+#define BREAK_IF(cond_) if (cond_) DEBUG_BREAK();
 
 #else
 
@@ -73,7 +79,7 @@ __release_variant
 #define DEBUG_ASSERT(x_, msg_, ...) \
     if (!(x_)) { \
         fprintf(stderr, "%s : %d\nASSERT FAILED: " msg_ "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
-        __debugbreak(); \
+        DEBUG_BREAK(); \
     }
 
 #define DEBUG_WARN(x_, msg_, ...) \

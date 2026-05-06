@@ -137,7 +137,7 @@ const bool Renderer2D::HasClicked() {
 
 void GameLoopReturnType::QueueRenderObject(Batch* ptr, unsigned int zLayer){
 	RenderCommand self;
-	self.Batch = ptr;
+	self.BatchObj= ptr;
 	self.StoredValueType = RenderCommand::Type::FBatchDC;
 	self.IssuedZLayer = zLayer;
 
