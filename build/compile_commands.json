@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/home/dimkorchev/Плот/code/OpenGl-2D-Renderer-Revamped/build",
+  "command": "/usr/bin/g++ -DGLEW_STATIC -isystem /home/dimkorchev/vcpkg/installed/x64-linux/include -g -std=gnu++23 -o CMakeFiles/Engine.dir/src/main.cpp.o -c /home/dimkorchev/Плот/code/OpenGl-2D-Renderer-Revamped/src/main.cpp",
+  "file": "/home/dimkorchev/Плот/code/OpenGl-2D-Renderer-Revamped/src/main.cpp",
+  "output": "CMakeFiles/Engine.dir/src/main.cpp.o"
+}
+]

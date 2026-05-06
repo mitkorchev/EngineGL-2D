@@ -1,0 +1,3 @@
+/home/dimkorchev/Плот/code/OpenGl-2D-Renderer-Revamped/build/CMakeFiles/Engine.dir
+/home/dimkorchev/Плот/code/OpenGl-2D-Renderer-Revamped/build/CMakeFiles/edit_cache.dir
+/home/dimkorchev/Плот/code/OpenGl-2D-Renderer-Revamped/build/CMakeFiles/rebuild_cache.dir
