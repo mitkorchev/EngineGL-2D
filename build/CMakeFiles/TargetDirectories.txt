@@ -1,3 +1,0 @@
-C:/Users/zapza/Desktop/EngineGL-2D/build/CMakeFiles/Engine.dir
-C:/Users/zapza/Desktop/EngineGL-2D/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/zapza/Desktop/EngineGL-2D/build/CMakeFiles/ZERO_CHECK.dir
