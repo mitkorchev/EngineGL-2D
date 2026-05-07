@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 3.20)
 
-set(CMAKE_TOOLCHAIN_FILE "/home/dimkorchev/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
-set(VCPKG_TARGET_TRIPLET "x64-linux")
+if(WIN32)
+    set(VCPKG_TARGET_TRIPLET "x64-windows-static" CACHE STRING "Vcpkg triplet" FORCE)
+endif()
+
+set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "Vcpkg toolchain file")
 
 project(EngineGL2D LANGUAGES CXX)
 
@@ -11,8 +14,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(glfw3 CONFIG REQUIRED)
 find_package(GLEW CONFIG REQUIRED)
-#   Since this is header-only, it can't be downloaded automatically through here.
-#find_package(stb CONFIG REQUIRED)
 
 file(GLOB_RECURSE SOURCES
     main.cpp
@@ -23,7 +24,7 @@ add_executable(Engine ${SOURCES})
 
 target_link_libraries(Engine PRIVATE
     glfw
-    GLEW::GLEW
+    GLEW::glew_s
 )
 
 if (WIN32)

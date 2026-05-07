@@ -216,8 +216,8 @@ const Font* ResourceService::GetFontByName(
 }
 
 void ResourceService::UploadFontParameters(
-	const char* fontName,
 	const char* fontFileLocation,
+	const char* fontName,
 	bool loadInUIsheet
 ) {
 	m_FontLoadQueue.emplace_back(

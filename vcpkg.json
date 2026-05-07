@@ -1,10 +1,11 @@
 {
-    "name": "enginegl2d",
-    "version-string": "1.0.0",
-    "dependencies": [
-        "glfw3",
-        "glew",
-        "glm",
-        "stb"
-    ]
+  "name": "enginegl2d",
+  "builtin-baseline": "bc71aa640f89933294f16e004b212c7fd3183eed",
+  "version-string": "1.0.0",
+  "dependencies": [
+    "glfw3",
+    "glew",
+    "glm",
+    "stb"
+  ]
 }

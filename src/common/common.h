@@ -42,16 +42,13 @@ These include:
 
 
 #if defined(_MSC_VER)
-    #define DEBUG_BREAK() DEBUG_BREAK()
+    #define DEBUG_BREAK() __debugbreak()
 #elif defined(__GNUC__) || defined(__clang__)
     #define DEBUG_BREAK() __builtin_trap()
 #else
     #include <csignal>
     #define DEBUG_BREAK() std::raise(SIGTRAP)
 #endif
-
-
-namespace fs = std::filesystem;
 
 
 #define FLOAT_COMPARE_TOLERANCE 0.0001f
@@ -103,6 +100,7 @@ __release_variant
 
 
 typedef unsigned int ID;
+namespace fs = std::filesystem;
 
 
 

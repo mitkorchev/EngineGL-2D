@@ -2,20 +2,37 @@
     "version": 3,
     "configurePresets": [
         {
-            "name": "default",
-            "displayName": "Default",
+            "name": "linux-default",
+            "displayName": "Linux Default",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
                 "CMAKE_TOOLCHAIN_FILE": "$env{HOME}/vcpkg/scripts/buildsystems/vcpkg.cmake",
-                "CMAKE_BUILD_TYPE": "Debug"
+                "CMAKE_BUILD_TYPE": "Debug",
+                "VCPKG_TARGET_TRIPLET": "x64-linux"
+            }
+        },
+        {
+            "name": "windows-default",
+            "displayName": "Windows Default",
+            "generator": "Visual Studio 17 2022",
+            "binaryDir": "${sourceDir}/build",
+            "architecture": "x64",
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "$env{USERPROFILE}/vcpkg/scripts/buildsystems/vcpkg.cmake",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "VCPKG_TARGET_TRIPLET": "x64-windows"
             }
         }
     ],
     "buildPresets": [
         {
-            "name": "default",
-            "configurePreset": "default"
+            "name": "linux-default",
+            "configurePreset": "linux-default"
+        },
+        {
+            "name": "windows-default",
+            "configurePreset": "windows-default"
         }
     ]
 }
