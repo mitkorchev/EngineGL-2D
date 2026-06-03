@@ -34,14 +34,17 @@ void UIManager::InterpretInput(
 
 	//	---		RENDER		---	 //
 
-	RenderWidgetTree(uiBatch, glm::vec2(0.f, 0.f), baseZLayer, substep);
+	WidgetLayoutContext uiManagerLayoutContext;
+	uiManagerLayoutContext.absoluteOrigin = glm::vec2(0.f, 0.f);
+	uiManagerLayoutContext.dimensions = GetDimensions();
+	RenderWidgetTree(uiBatch, uiManagerLayoutContext, baseZLayer, substep);
 
 	//	render windows
 	for (size_t i = 0; i < m_OpenedWindows.size(); i++) {
 		float correctBaseZlayer = baseZLayer + ((i + 1) * MAXIMUM_NESTED_WIDGETS * substep);
 		m_OpenedWindows[i].get()->RenderWidgetTree(
 			uiBatch,
-			glm::vec2(0.f, 0.f),
+			uiManagerLayoutContext,
 			correctBaseZlayer,
 			substep
 		);
@@ -103,12 +106,12 @@ void UIManager::InterpretInput(
 		float mouseX, mouseY;
 		input.GetMousePosition(mouseX, mouseY);
 		glm::vec2 mousePos = glm::vec2(mouseX, mouseY);
-		WidgetCompositionInterface* clickedWidget = DetectClick(glm::vec2(0.f, 0.f), mousePos);
+		WidgetCompositionInterface* clickedWidget = DetectClick(uiManagerLayoutContext, mousePos);
 		Window* clickedWindow = nullptr;
 
 		for (size_t i = m_OpenedWindows.size(); i-- > 0; ) {
 			Window* targetWindow = m_OpenedWindows[i].get();
-			WidgetCompositionInterface* windowTarget = targetWindow->DetectClick(glm::vec2(0.f, 0.f), mousePos);
+			WidgetCompositionInterface* windowTarget = targetWindow->DetectClick(uiManagerLayoutContext, mousePos);
 			
 			if (windowTarget) {
 				clickedWidget = windowTarget;
@@ -135,7 +138,7 @@ void UIManager::InterpretInput(
 }
 
 void UIManager::OpenWindow(std::unique_ptr<Window> window, glm::vec2 openWhere) {
-	window.get()->SetRelPosition(openWhere);
+	window.get()->SetPosRelativeToAnchor(openWhere);
 	m_OpenedWindows.push_back(std::move(window));
 }
 
@@ -190,6 +193,7 @@ std::unique_ptr<Window> UIManager::GenWindowObject(
 
 	auto self = std::make_unique<Window>(GetNextWindowID(), dimensions, selectedSkin);
 	
+	//	TODO:	perfect usecase for alignment
 	if (haveClosingButton) {
 		glm::vec2 closeBtnPos = dimensions;
 		closeBtnPos.x -= 20 + 4;	//	TODO:	HARDCODED DIMENSIONS OF CLOSING BUTTON	

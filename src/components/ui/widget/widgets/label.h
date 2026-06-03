@@ -13,28 +13,36 @@ public:
 	
 	Label(
 		const Text& text,
-		glm::vec2 offsetRelToParent
+		glm::vec2 offsetRelToParent, ,
+		Alignment alignment = Alignment::TOPLEFT,
+		Alignment anchor = Alignment::TOPLEFT
 	) :
 		m_StoredText(text),
 		WidgetCompositionInterface(
 			offsetRelToParent,
 			glm::vec2(text.GetLineLength(), text.GetLineHeight()),
 			nullptr,
-			false
+			false,
+			alignment,
+			anchor
 		)
 	{}
 
 	Label(
 		const Text& text,
 		glm::vec2 offsetRelToParent,
-		glm::vec2 dimensions
+		glm::vec2 dimensions,
+		Alignment alignment = Alignment::TOPLEFT,
+		Alignment anchor = Alignment::TOPLEFT
 	) :
 		m_StoredText(text),
 		WidgetCompositionInterface(
 			offsetRelToParent,
 			dimensions,
 			nullptr,
-			false
+			false,
+			alignment,
+			anchor
 		)
 	{
 		m_StoredText.SetLineLength(dimensions.x);

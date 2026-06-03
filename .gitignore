@@ -1,5 +1,6 @@
 build/
-.vscode/
+x64/
+.*
 
 compile_commands.json
 main.cpp
