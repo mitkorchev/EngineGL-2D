@@ -11,13 +11,17 @@ public:
 	TextlessButton(
 		glm::vec2 offsetRelToParent,
 		glm::vec2 dimensions,
-		const BackgroundSkinInterface* bgSkin
+		const BackgroundSkinInterface* bgSkin,
+		Alignment alignment = Alignment::TOPLEFT,
+		Alignment anchor = Alignment::TOPLEFT
 	) :
 		WidgetCompositionInterface(
 			offsetRelToParent,
 			dimensions,
 			bgSkin,
-			true
+			true,
+			alignment,
+			anchor
 		)
 	{
 	}
