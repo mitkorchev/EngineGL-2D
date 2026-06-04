@@ -1,8 +1,5 @@
 #include "shader.h"
 
-
-
-
 struct ShaderProgramSources {
     std::string VertexSource;
     std::string FragmentSource;

@@ -106,14 +106,11 @@ public:
 		int paddingPx
 	);
 
-
 	SpriteSheet();
-
 
 	unsigned short GetSpriteIndexByName(
 		const char* _spriteName
 	) const;
-
 
 	//	!!!		ABANDONED	  !!!
 	void TransformIndicesToUVRegionArray(
@@ -132,17 +129,14 @@ private:
 	const int c_StandardImageLoadingMethodReturnCode	= 1;
 	const int c_ConfigFileLoadingMethodReturnCode		= 2;
 	const int c_ErrorInLoadingMethodReturnCode			= -1;
-		
 
 	int DetermineLoadingMethodFromGivenPath(
 		const std::string& _pathFromConstructor
 	);
 
-
 	void ConfigurationPairLoadingMethod(
 		const char* _pathToConfigFile
 	);
-
 
 	void StandardImageLoadingMethod(
 		const char* _pathFromConstructor,
@@ -151,16 +145,13 @@ private:
 		int paddingPx
 	);
 
-
 	void LoadImageInTexture(
 		const char* _pathToFile
 	);
 
-
 	void InterpretTextureParametersString(
 		const std::string& _texParamsLine
 	);
-
 
 	void SetTextureParametersToGL();
 

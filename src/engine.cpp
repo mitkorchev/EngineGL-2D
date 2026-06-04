@@ -130,6 +130,7 @@ remaining:
 	UI ergonomics like auto centering of text within a button
 	colour palette-dependant sprites
 	playing of sounds
+	lodaing mechanisms need to be moved to the resource service. Having them hacked away in the classes themselves is no longer viable.
 
 	font file chars are in this order:
 	АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЬЮЯЍ

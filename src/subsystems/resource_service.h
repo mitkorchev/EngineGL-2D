@@ -19,30 +19,15 @@ struct ShaderLoadingParameters {
 };
 
 struct SpriteSheetLoadingParameters {
-	const std::string m_LocationOfImage;
-	const std::string m_SheetName;
-	const std::string m_PreferredShaderName;
-	int m_SpritesPerRow;
-	int m_SpritesPerCol;
-	int paddingPx = 0;
-	bool loadInUIsheet;
+	const char* location;
+	bool loadInUISheet;
 
 	SpriteSheetLoadingParameters(
-		const char* _locationRawImage,
-		const char* _sheetName,
-		const char* _preferredShader,
-		int _spritesPerRow,
-		int _spritesPerCol,
-		bool loadInUIsheet,
-		int paddingPx = 0
+		const char* fileLocation,
+		bool loadInUIsheetArg = false
 	) :
-		m_LocationOfImage(_locationRawImage),
-		m_SheetName(_sheetName),
-		m_PreferredShaderName(_preferredShader),
-		m_SpritesPerRow(_spritesPerRow),
-		m_SpritesPerCol(_spritesPerCol),
-		loadInUIsheet(loadInUIsheet),
-		paddingPx(paddingPx)
+		location(fileLocation),
+		loadInUISheet(loadInUIsheetArg)
 	{}
 };
 
@@ -67,6 +52,8 @@ class ResourceService {
 	GLFWwindow* m_MainWindowContext = nullptr;
 
 private:
+
+	fs::path m_AbsoluteBasePath;
 
 	std::vector<Shader> m_Shaders;
 	std::vector<SpriteSheet> m_Sheets;
@@ -115,11 +102,19 @@ private:
 		int paddingPx
 	);
 
+	void LoadSpriteSheets();
+
 	void LoadFonts();
 
 	void LoadDefaultVariables();
 
+	std::string GetAbsolutePathForAsset(
+		const char* relPath
+	) const;
+
 public:
+
+	void SetAbsoluteBasePath(const char* path);
 
 	void UploadShaderParameters(
 		const char* _location,
@@ -127,13 +122,8 @@ public:
 	);
 
 	void UploadSpriteSheetParameters(
-		const char* _locationRawImage,
-		const char* _sheetName,
-		const char* _preferredShader,
-		int _spritesPerRow,
-		int _spritesPerCol,
-		bool loadInUIsheet = false,
-		int paddingPx = 0
+		const char* location,
+		bool loadInUIsheet = false
 	);
 
 	void UploadFontParameters(
@@ -177,6 +167,8 @@ public:
 	Batch* GetUIBatch() { return &m_UIBatch; }
 
 	const SpriteInstance GetCaretInstance() const { return m_CaretSprite; }
+
+	const fs::path GetAbsoluteBasePath() const { return m_AbsoluteBasePath; }
 
 public:
 

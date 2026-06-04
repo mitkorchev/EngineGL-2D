@@ -70,22 +70,12 @@ void ResourceService::UploadShaderParameters(
 }
 
 void ResourceService::UploadSpriteSheetParameters(
-	const char* _locationRawImage,
-	const char* _sheetName,
-	const char* _preferredShader,
-	int _spritesPerRow,
-	int _spritesPerCol,
-	bool loadInUIsheet,
-	int paddingPx
+	const char* location,
+	bool loadInUIsheet = false
 ) {
 	m_SpriteSheetLoadQueue.emplace_back(
-		_locationRawImage,
-		_sheetName,
-		_preferredShader,
-		_spritesPerRow,
-		_spritesPerCol,
-		loadInUIsheet,
-		paddingPx
+		location,
+		loadInUIsheet
 	);
 }
 
@@ -100,34 +90,17 @@ void ResourceService::StartLoadingProcess() {
 	for (size_t i = 0; i < m_ShaderLoadQueue.size(); i++) {
 		ShaderLoadingParameters& params = m_ShaderLoadQueue[i];
 		LoadShader(
-			std::string(params.m_LocationOfShaderFile),
+			GetAbsolutePathForAsset(params.m_LocationOfShaderFile.c_str()),
 			std::string(params.m_ShaderName)
 		);
 	}
 	m_ShaderLoadQueue.clear();
 
-	
 	if (m_Sheets.capacity() <= m_SpriteSheetLoadQueue.size()) {
 		m_Sheets.reserve(m_SpriteSheetLoadQueue.size());
 	}
 
-	for (size_t i = 0; i < m_SpriteSheetLoadQueue.size(); i++) {
-		SpriteSheetLoadingParameters& params = m_SpriteSheetLoadQueue[i];
-		
-		LoadSpriteSheet(
-			std::string(params.m_LocationOfImage),
-			std::string(params.m_SheetName),
-			GetShaderByName(params.m_PreferredShaderName.c_str()),
-			params.m_SpritesPerRow,
-			params.m_SpritesPerCol,
-			params.paddingPx
-		);
-
-		if (params.loadInUIsheet) {
-			m_UIBatch.AddSheetToBatch(GetSpriteSheetByName(params.m_SheetName.c_str()));
-		}
-	}
-	m_SpriteSheetLoadQueue.clear();
+	LoadSpriteSheets();
 
 	LoadFonts();
 
@@ -232,7 +205,7 @@ void ResourceService::LoadFonts() {
 		FontLoadingParameters params = m_FontLoadQueue[i];
 		const std::string& name = params.name;
 		const std::string& location = params.location;
-		std::fstream file(location.c_str(), std::ios::in);
+		std::fstream file(GetAbsolutePathForAsset(location.c_str()), std::ios::in);
 		std::string currentLine;
 
 		std::u32string preparedCharset;
@@ -315,4 +288,24 @@ void ResourceService::LoadFonts() {
 	}
 
 	m_FontLoadQueue.clear();
+}
+
+void ResourceService::LoadSpriteSheets() {
+	for (const auto& params : m_SpriteSheetLoadQueue) {
+		const std::string path = GetAbsolutePathForAsset(params.location);
+
+		DEBUG_ASSERT(path.ends_with(".sheet"), "Attempted to load sprite sheet with bad extension [%s]", path.c_str());
+
+
+	}
+}
+
+void ResourceService::SetAbsoluteBasePath(const char* path) {
+	m_AbsoluteBasePath = fs::path(path);
+}
+
+std::string ResourceService::GetAbsolutePathForAsset(
+	const char* relPath
+) const {
+	return (GetAbsoluteBasePath() / fs::path(relPath)).string();
 }

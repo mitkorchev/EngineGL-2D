@@ -1,4 +1,4 @@
-relpath="test/res/ui.png"
+relpath="test/res/gui.png"
 params="S repeat T repeat"
 
 [ul_corner]

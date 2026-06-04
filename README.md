@@ -1,1 +1,1 @@
-
+This framework is best developed in VS. Otherwise, the CMake configuration isn't complete.
