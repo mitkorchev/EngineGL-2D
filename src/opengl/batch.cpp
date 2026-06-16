@@ -418,10 +418,11 @@ SpriteInstance Batch::GetSprite(
 			
 			DEBUG_ASSERT(!retVal.IsNull(), "Batch derived bad sprite [%s] from sheet [%s].", _spriteNameWithinSheet, _sheetName);
 
-			break;
+			return retVal;
 		}
 	}
 
+	DEBUG_ASSERT(0, "Batch looked for sprite [%s] in sheet [%s] but found nothing.", _spriteNameWithinSheet, _sheetName);
 	return retVal;
 }
 

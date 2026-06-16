@@ -422,10 +422,10 @@ void ResourceService::LoadSpriteSheets() {
 
 		SpriteSheet sheet = SpriteSheet(definition);
 
-		const SpriteSheet& pushedSheetObjRef = m_Sheets.emplace_back(std::move(sheet));
+		m_Sheets.emplace_back(std::move(sheet));
 
 		if (params.loadInUISheet) {
-			m_UIBatch.AddSheetToBatch(&pushedSheetObjRef);
+			m_UIBatch.AddSheetToBatch(&m_Sheets.back());
 		}
 	}
 

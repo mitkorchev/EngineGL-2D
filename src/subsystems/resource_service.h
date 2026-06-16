@@ -167,6 +167,6 @@ public:
 
 public:
 
-	const char* c_SpecialUISheetName	= "SPECIAL_UI_SPRITESHEET_NAME";
+	const char* c_SpecialUISheetName	= "gui";
 
 };
