@@ -1,108 +1,25 @@
 #include "shader.h"
 
-struct ShaderProgramSources {
-    std::string VertexSource;
-    std::string FragmentSource;
-};
-
-static ShaderProgramSources ParseShader(const std::string& filepath) {
-    std::ifstream stream(filepath);
-    DEBUG_ASSERT(stream.is_open(), "Failed to open shader file: %s", filepath.c_str())
-
-    enum class ShaderType {
-        NONE = -1, VERTEX = 0, FRAGMENT = 1
-    };
-
-    ShaderType type = ShaderType::NONE;
-
-    std::string line;
-    std::stringstream ss[2];
-
-    while (getline(stream, line))
-    {
-        if (line.find("#shader") != std::string::npos) {
-
-            if (line.find("vertex") != std::string::npos) {
-                //set mode to vertex
-                type = ShaderType::VERTEX;
-            }
-            else if (line.find("fragment") != std::string::npos) {
-                //set mode to frag
-                type = ShaderType::FRAGMENT;
-            }
-        }
-        else
-            ss[(int)type] << line << "\n";
-    }
-
-    return { ss[0].str(), ss[1].str() };
-}
-
-static unsigned int CompileShader(unsigned int type, const std::string& source) {
-
-    unsigned int id = glCreateShader(type);
-    const char* src = source.c_str();
-    glShaderSource(id, 1, &src, nullptr);
-    glCompileShader(id);
-
-    int result;
-    glGetShaderiv(id, GL_COMPILE_STATUS, &result);
-    if (result == GL_FALSE) {
-        int length;
-        glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-        char* message = (char*)alloca(length * sizeof(char));  //dynamic stack allocation
-        glGetShaderInfoLog(id, length, &length, message);
-        std::cout << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader!\n";
-        std::cout << message << "\n";
-        glDeleteShader(id);
-        return 0;
-    }
-
-    return id;
-}
-
-static unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader) {
-
-    unsigned int program = glCreateProgram();
-    unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
-    unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
-
-    glAttachShader(program, vs);
-    glAttachShader(program, fs);
-    glLinkProgram(program);
-    glValidateProgram(program);
-
-    glDeleteShader(vs);
-    glDeleteShader(fs);
-
-    return program;
-}
-
-
 Shader::Shader(
-    const std::string& _locationShaderFile,
-    const std::string& _shaderName
-) 
-    : m_ShaderName(_shaderName)
+    uint32_t programId,
+    const std::string& shaderName
+) :
+    m_ShaderName(shaderName),
+    m_ProgramID(programId)
 {
-    ShaderProgramSources src = ParseShader(_locationShaderFile);
-    m_ProgramID = CreateShader(src.VertexSource, src.FragmentSource);
     InitialiseUniformBlockLocationMap();
     InitialiseUniformLocationMap();
 }
-
 
 const void Shader::UseShader() const {
     DEBUG_ASSERT(m_ProgramID != 0, "Using uninitialised shader!")
     glUseProgram(m_ProgramID);
 }
 
-
 void Shader::InitialiseUniformBlockLocationMap() {
     unsigned int Program = GetShaderId();
     int LocationCount = 0;
     glGetProgramiv(Program, GL_ACTIVE_UNIFORM_BLOCKS, &LocationCount);
-
 
     for (int i = 0; i < LocationCount; i++) {
         char BlockName[100] = { 0 };
@@ -119,7 +36,6 @@ void Shader::InitialiseUniformBlockLocationMap() {
     }
 }
 
-
 bool Shader::IsUniformBlock(
     const char* _uniformBlockName
 ) {
@@ -133,7 +49,6 @@ bool Shader::IsUniformBlock(
     }
     return false;
 }
-
 
 void Shader::InitialiseUniformLocationMap() {
 
@@ -184,7 +99,6 @@ void Shader::InitialiseUniformLocationMap() {
     }
 }
 
-
 unsigned int Shader::GetUniformBlockLocation(
     const char* _uniformBlockName
 ) const {
@@ -195,7 +109,6 @@ unsigned int Shader::GetUniformBlockLocation(
     DEBUG_LOG("Uniform block [%s] in Shader [%s] not found.", GetName().c_str(), _uniformBlockName);
     return 0;
 }
-
 
 void Shader::SetStandardModel(
     const glm::mat4& _model
@@ -208,7 +121,6 @@ void Shader::SetStandardModel(
     );
 }
 
-
 void Shader::SetStandardView(
     const glm::mat4& _view
 ) const {
@@ -219,7 +131,6 @@ void Shader::SetStandardView(
         glm::value_ptr(_view)
     );
 }
-
 
 void Shader::SetStandardProjection(
     const glm::mat4& _projection
@@ -232,7 +143,6 @@ void Shader::SetStandardProjection(
     );
 }
 
-
 bool Shader::IsStandardUniform(
     const char* _uniformName
 ) {
@@ -242,7 +152,6 @@ bool Shader::IsStandardUniform(
     }
     return false;
 }
-
 
 void Shader::SetIntArray(
     const char* _uniformName,
@@ -256,7 +165,6 @@ void Shader::SetIntArray(
     );
 }
 
-
 void Shader::SetFloatArray(
     const char* _uniformName,
     const float* _array,
@@ -268,7 +176,6 @@ void Shader::SetFloatArray(
         _array
     );
 }
-
 
 void Shader::ApplyUniforms(
     const UniformDataVector* _uniformArray
@@ -318,7 +225,6 @@ function_; return;}
     }
 }
 
-
 int Shader::GetUniformLocation(
     const char* _uniformName
 ) const {
@@ -331,7 +237,6 @@ int Shader::GetUniformLocation(
     DEBUG_WARN(0, "Shader [%s] can't find uniform with name [%s].", GetName().c_str(), _uniformName);
     return -1;
 }
-
 
 void Shader::SetMat4(
     const char* _uniformName,
@@ -375,7 +280,6 @@ void Shader::SetVec2(
         _uniformValue.y
     );
 }
-
 
 const std::string& Shader::GetName() const { return m_ShaderName; }
 const unsigned int Shader::GetShaderId() const { return m_ProgramID; }

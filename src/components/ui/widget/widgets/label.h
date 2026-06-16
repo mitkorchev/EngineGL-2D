@@ -13,7 +13,7 @@ public:
 	
 	Label(
 		const Text& text,
-		glm::vec2 offsetRelToParent, ,
+		glm::vec2 offsetRelToParent,
 		Alignment alignment = Alignment::TOPLEFT,
 		Alignment anchor = Alignment::TOPLEFT
 	) :

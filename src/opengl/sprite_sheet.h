@@ -20,6 +20,30 @@
 #include "batch_instance_primitives.h"
 #include "shader.h"
 
+//	Structs intended to ease loading of this type
+
+struct SpriteDefinition {
+	std::string name;
+
+	int x = 0;
+	int y = 0;
+	int w = 0;
+	int h = 0;
+};
+
+struct SpriteSheetDefinition {
+	std::string sheetName;
+	ImageFile image;
+	const Shader* shader;
+	std::string params;
+	std::string filter;
+
+	int rowCount = 0;
+	int colCount = 0;
+	int padding = 0;
+
+	std::vector<SpriteDefinition> sprites;
+};
 
 struct alignas(float) UVRegion {
 
@@ -106,18 +130,14 @@ public:
 		int paddingPx
 	);
 
+	SpriteSheet(
+		const SpriteSheetDefinition& definition
+	);
+
 	SpriteSheet();
 
 	unsigned short GetSpriteIndexByName(
 		const char* _spriteName
-	) const;
-
-	//	!!!		ABANDONED	  !!!
-	void TransformIndicesToUVRegionArray(
-		const int* _indexArray,
-		const int _indexArraySize,
-		std::vector<UVRegion>& OUT_uvRegionArray,
-		std::vector<float>* OUT_vertexArray = nullptr
 	) const;
 
 private:	//	Private getters 
@@ -126,34 +146,17 @@ private:	//	Private getters
 
 private:
 
-	const int c_StandardImageLoadingMethodReturnCode	= 1;
-	const int c_ConfigFileLoadingMethodReturnCode		= 2;
-	const int c_ErrorInLoadingMethodReturnCode			= -1;
-
-	int DetermineLoadingMethodFromGivenPath(
-		const std::string& _pathFromConstructor
+	void SpriteListMethod(
+		const SpriteSheetDefinition& definition
 	);
 
-	void ConfigurationPairLoadingMethod(
-		const char* _pathToConfigFile
+	void RowColMethod(
+		const SpriteSheetDefinition& definition
 	);
 
-	void StandardImageLoadingMethod(
-		const char* _pathFromConstructor,
-		int _spritesPerRow,
-		int _spritesPerCol,
-		int paddingPx
+	void GenerateTexture(
+		const SpriteSheetDefinition& definition
 	);
-
-	void LoadImageInTexture(
-		const char* _pathToFile
-	);
-
-	void InterpretTextureParametersString(
-		const std::string& _texParamsLine
-	);
-
-	void SetTextureParametersToGL();
 
 public:
 
@@ -161,7 +164,6 @@ public:
 		const char* spriteName,
 		size_t sheetIndex
 	) const;
-
 
 	void GetSpriteInstances(
 		std::vector<SpriteInstance>& OUT_spriteArray,
@@ -204,5 +206,3 @@ public:
 	void DestroyGLTextureObject();
 
 };
-
-

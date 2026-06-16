@@ -1,9 +1,11 @@
-relpath="test/res/panda.png"
+img_path="test/res/panda.png"
 params="S repeat T repeat"
 
+name=panda
+shader_name=batch
 
 [nose]
-x500y150w50h50
+x=500 y=150 w=50 h=50
 
 [eye]
-x600y150w50h50
+x=600 y=150 w=50 h=50

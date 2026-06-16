@@ -88,19 +88,7 @@ public:
 
 private:
 
-	void LoadShader(
-		const std::string& _locationShaderFile,
-		const std::string& _shaderName
-	);
-
-	void LoadSpriteSheet(
-		const std::string& _locationRawImage,
-		const std::string& _sheetName,
-		const Shader* _preferredShader,
-		int _spritesPerRow,
-		int _spritesPerCol,
-		int paddingPx
-	);
+	void LoadShaders();
 
 	void LoadSpriteSheets();
 
@@ -111,6 +99,13 @@ private:
 	std::string GetAbsolutePathForAsset(
 		const char* relPath
 	) const;
+
+private:
+
+	void LoadImageFile(
+		const char* fullPath,
+		ImageFile* OUT_image
+	);
 
 public:
 

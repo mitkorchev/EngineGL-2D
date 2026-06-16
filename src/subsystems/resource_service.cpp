@@ -1,34 +1,9 @@
 ﻿#include "resource_service.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 static const char* g_DefaultFontName = "cyrillic";
-
-void ResourceService::LoadShader(
-	const std::string& _locationShaderFile,
-	const std::string& _shaderName
-) {
-	m_Shaders.emplace_back(
-		_locationShaderFile,
-		_shaderName
-	);
-}
-
-void ResourceService::LoadSpriteSheet(
-	const std::string& _locationRawImage,
-	const std::string& _sheetName,
-	const Shader* _preferredShader,
-	int _spritesPerRow,
-	int _spritesPerCol,
-	int paddingPx
-) {
-	m_Sheets.emplace_back(
-		_locationRawImage,
-		_sheetName,
-		_preferredShader,
-		_spritesPerRow,
-		_spritesPerCol,
-		paddingPx
-	);
-}
 
 const SpriteSheet* ResourceService::GetSpriteSheetByName(
 	const char* _spriteSheetName
@@ -71,7 +46,7 @@ void ResourceService::UploadShaderParameters(
 
 void ResourceService::UploadSpriteSheetParameters(
 	const char* location,
-	bool loadInUIsheet = false
+	bool loadInUIsheet
 ) {
 	m_SpriteSheetLoadQueue.emplace_back(
 		location,
@@ -83,22 +58,7 @@ void ResourceService::StartLoadingProcess() {
 	m_Shaders.clear();
 	m_Sheets.clear();
 
-	if (m_Shaders.capacity() <= m_ShaderLoadQueue.size()) {
-		m_Shaders.reserve(m_ShaderLoadQueue.size());
-	}
-
-	for (size_t i = 0; i < m_ShaderLoadQueue.size(); i++) {
-		ShaderLoadingParameters& params = m_ShaderLoadQueue[i];
-		LoadShader(
-			GetAbsolutePathForAsset(params.m_LocationOfShaderFile.c_str()),
-			std::string(params.m_ShaderName)
-		);
-	}
-	m_ShaderLoadQueue.clear();
-
-	if (m_Sheets.capacity() <= m_SpriteSheetLoadQueue.size()) {
-		m_Sheets.reserve(m_SpriteSheetLoadQueue.size());
-	}
+	LoadShaders();
 
 	LoadSpriteSheets();
 
@@ -125,6 +85,7 @@ void ResourceService::LoadDefaultVariables() {
 	auto closeBtnSkin = std::make_unique<ImageBgSkin>("closeBtnSkin");
 	closeBtnSkin.get()->imageInstance = m_UIBatch.GetSprite(c_SpecialUISheetName, "closeBtn");
 	AddBgSkin(std::move(closeBtnSkin));
+
 
 	m_bgCloseBtnSkin = GetBgSkinByName("closeBtnSkin");
 	
@@ -201,6 +162,8 @@ void ResourceService::UploadFontParameters(
 }
 
 void ResourceService::LoadFonts() {
+	m_Fonts.clear();
+
 	for (size_t i = 0; i < m_FontLoadQueue.size(); i++) {
 		FontLoadingParameters params = m_FontLoadQueue[i];
 		const std::string& name = params.name;
@@ -291,13 +254,182 @@ void ResourceService::LoadFonts() {
 }
 
 void ResourceService::LoadSpriteSheets() {
+	m_Sheets.clear();
+	m_Sheets.reserve(m_SpriteSheetLoadQueue.size());
+
 	for (const auto& params : m_SpriteSheetLoadQueue) {
-		const std::string path = GetAbsolutePathForAsset(params.location);
+		const std::string sheetPath = GetAbsolutePathForAsset(params.location);
 
-		DEBUG_ASSERT(path.ends_with(".sheet"), "Attempted to load sprite sheet with bad extension [%s]", path.c_str());
+		DEBUG_ASSERT(sheetPath.ends_with(".sheet"), "Attempted to load sprite sheet with bad extension [%s]", sheetPath.c_str());
 
+		std::fstream file(sheetPath, std::ios::in);
 
+		DEBUG_ASSERT(
+			file.is_open(),
+			"Failed to open sprite sheet [%s]",
+			sheetPath.c_str()
+		);
+
+		SpriteSheetDefinition definition;
+
+		std::string currentLine;
+		SpriteDefinition* currentSprite = nullptr;
+
+		while (std::getline(file, currentLine)) {
+			if (currentLine.empty() || currentLine.starts_with("//")) {
+				continue;
+			}
+
+			// [sprite_name]
+			if (currentLine.starts_with("[") &&
+				currentLine.ends_with("]")) {
+
+				std::string spriteName =
+					currentLine.substr(1, currentLine.size() - 2);
+
+				definition.sprites.emplace_back();
+				currentSprite = &definition.sprites.back();
+				currentSprite->name = spriteName;
+
+				continue;
+			}
+
+			if (currentSprite &&
+				currentLine.contains("x=") &&
+				currentLine.contains("y=") &&
+				currentLine.contains("w=") &&
+				currentLine.contains("h=")) {
+
+				std::stringstream ss(currentLine);
+				std::string token;
+
+				bool foundX = false;
+				bool foundY = false;
+				bool foundW = false;
+				bool foundH = false;
+
+				while (ss >> token) {
+					auto equalSign = token.find('=');
+
+					DEBUG_ASSERT(
+						equalSign != std::string::npos,
+						"Sprite sheet [%s] has malformed sprite definition [%s]",
+						sheetPath.c_str(),
+						currentLine.c_str()
+					);
+
+					std::string key = token.substr(0, equalSign);
+					std::string value = token.substr(equalSign + 1);
+
+					if (key == "x") {
+						currentSprite->x = std::stoi(value);
+						foundX = true;
+					}
+					else if (key == "y") {
+						currentSprite->y = std::stoi(value);
+						foundY = true;
+					}
+					else if (key == "w") {
+						currentSprite->w = std::stoi(value);
+						foundW = true;
+					}
+					else if (key == "h") {
+						currentSprite->h = std::stoi(value);
+						foundH = true;
+					}
+				}
+
+				DEBUG_ASSERT(
+					foundX && foundY && foundW && foundH,
+					"Sprite sheet [%s] has incomplete sprite definition [%s]",
+					sheetPath.c_str(),
+					currentLine.c_str()
+				);
+
+				continue;
+			}
+
+			DEBUG_ASSERT(
+				currentLine.contains("="),
+				"Sheet file [%s] has bad key-value pair.",
+				sheetPath.c_str()
+			);
+
+			auto equalSign = currentLine.find('=');
+
+			std::string key =
+				currentLine.substr(0, equalSign);
+
+			std::string val =
+				currentLine.substr(equalSign + 1);
+
+			// remove surrounding quotes
+			if (val.size() >= 2 &&
+				val.front() == '"' &&
+				val.back() == '"') {
+
+				val = val.substr(1, val.size() - 2);
+			}
+
+			if (key == "img_path") {
+				LoadImageFile(GetAbsolutePathForAsset(val.c_str()).c_str(), &definition.image);
+				continue;
+			}
+
+			if (key == "params") {
+				definition.params = std::move(val);
+				continue;
+			}
+
+			if (key == "filter") {
+				definition.filter = std::move(val);
+				continue;
+			}
+
+			if (key == "name") {
+				definition.sheetName = std::move(val);
+				continue;
+			}
+
+			if (key == "shader_name") {
+				const Shader* result = GetShaderByName(val.c_str());
+				definition.shader = result;
+				continue;
+			}
+
+			if (key == "rowCount") {
+				definition.rowCount = std::stoi(val);
+				continue;
+			}
+
+			if (key == "colCount") {
+				definition.colCount = std::stoi(val);
+				continue;
+			}
+
+			if (key == "padding") {
+				definition.padding = std::stoi(val);
+				continue;
+			}
+
+			DEBUG_ASSERT(
+				false,
+				"Unknown key [%s] in sprite sheet [%s]",
+				key.c_str(),
+				sheetPath.c_str()
+			);
+		}
+
+		SpriteSheet sheet = SpriteSheet(definition);
+
+		const SpriteSheet& pushedSheetObjRef = m_Sheets.emplace_back(std::move(sheet));
+
+		if (params.loadInUISheet) {
+			m_UIBatch.AddSheetToBatch(&pushedSheetObjRef);
+		}
 	}
+
+	m_SpriteSheetLoadQueue.clear();
 }
 
 void ResourceService::SetAbsoluteBasePath(const char* path) {
@@ -308,4 +440,134 @@ std::string ResourceService::GetAbsolutePathForAsset(
 	const char* relPath
 ) const {
 	return (GetAbsoluteBasePath() / fs::path(relPath)).string();
+}
+
+struct ShaderProgramSources {
+	std::string VertexSource;
+	std::string FragmentSource;
+};
+
+static ShaderProgramSources ParseShader(const std::string& filepath) {
+	std::ifstream stream(filepath);
+	DEBUG_ASSERT(stream.is_open(), "Failed to open shader file: %s", filepath.c_str())
+
+		enum class ShaderType {
+		NONE = -1, VERTEX = 0, FRAGMENT = 1
+	};
+
+	ShaderType type = ShaderType::NONE;
+
+	std::string line;
+	std::stringstream ss[2];
+
+	while (getline(stream, line))
+	{
+		if (line.find("#shader") != std::string::npos) {
+
+			if (line.find("vertex") != std::string::npos) {
+				//set mode to vertex
+				type = ShaderType::VERTEX;
+			}
+			else if (line.find("fragment") != std::string::npos) {
+				//set mode to frag
+				type = ShaderType::FRAGMENT;
+			}
+		}
+		else
+			ss[(int)type] << line << "\n";
+	}
+
+	return { ss[0].str(), ss[1].str() };
+}
+
+static unsigned int CompileShader(unsigned int type, const std::string& source) {
+
+	unsigned int id = glCreateShader(type);
+	const char* src = source.c_str();
+	glShaderSource(id, 1, &src, nullptr);
+	glCompileShader(id);
+
+	int result;
+	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
+	if (result == GL_FALSE) {
+		int length;
+		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
+		char* message = (char*)alloca(length * sizeof(char));  //dynamic stack allocation
+		glGetShaderInfoLog(id, length, &length, message);
+		std::cout << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader!\n";
+		std::cout << message << "\n";
+		glDeleteShader(id);
+		return 0;
+	}
+
+	return id;
+}
+
+static unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader) {
+
+	unsigned int program = glCreateProgram();
+	unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
+	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
+
+	glAttachShader(program, vs);
+	glAttachShader(program, fs);
+	glLinkProgram(program);
+	glValidateProgram(program);
+
+	glDeleteShader(vs);
+	glDeleteShader(fs);
+
+	return program;
+}
+
+void ResourceService::LoadShaders() {
+	m_Shaders.clear();
+
+	for (const auto& params : m_ShaderLoadQueue) {
+		std::string fullPathToShader = GetAbsolutePathForAsset(params.m_LocationOfShaderFile.c_str());
+		ShaderProgramSources src = ParseShader(fullPathToShader.c_str());
+		uint32_t programId = CreateShader(src.VertexSource, src.FragmentSource);
+
+		m_Shaders.emplace_back(
+			programId,
+			params.m_ShaderName
+		);
+	}
+}
+
+void ResourceService::LoadImageFile(
+	const char* fullPath,
+	ImageFile* OUT_image
+) {
+	unsigned char* imageData = nullptr;
+	int nChannels;
+	int heightPx;
+	int widthPx;
+
+	imageData = stbi_load(
+		fullPath,
+		&widthPx,
+		&heightPx,
+		&nChannels,
+		4
+	);
+
+	if (!imageData) {
+		// unfixable, crash here
+		std::cout << stbi_failure_reason();
+		throw std::runtime_error(stbi_failure_reason());
+	}
+
+	OUT_image->widthPx = widthPx;
+	OUT_image->heightPx = heightPx;
+	OUT_image->imageData = imageData;
+}
+
+void ImageFile::Destroy() {
+	if (imageData) {
+		stbi_image_free(imageData);
+		imageData = nullptr;
+		widthPx = 0;
+		heightPx = 0;
+	}
 }

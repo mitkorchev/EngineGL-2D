@@ -1,0 +1,7 @@
+img_path="test/res/cyrillic_print_big.png"
+name=cyrillic_print_big
+shader_name=batch
+
+rowCount=10
+colCount=10
+padding=4

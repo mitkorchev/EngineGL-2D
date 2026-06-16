@@ -59,6 +59,7 @@ void SpriteInformation::SetYCutoff(bool fromTop) {
 	}
 }
 
+//	TODO: make the final uint16 calculation in compile time to remove the float -> int conversion
 unsigned short SpriteInstance::PackRemainFactor(float remainFactor) {
 	return 65535 * remainFactor;
 }
