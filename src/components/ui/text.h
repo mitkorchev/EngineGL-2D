@@ -25,6 +25,10 @@ class Text {
 	mutable std::vector<FullSprite> m_TextGeometry;
 
 	mutable bool m_HasChanged = false;
+
+private:	//	Variable properties
+
+	mutable float m_TextLength = 0.f;
 	
 public:
 
@@ -80,7 +84,7 @@ public:
 	const TextOptions& GetTextOptions() const { return m_TextOptions; }
 	const Font* GetFont() const { return m_TextOptions.font; }
 	const float GetLineHeight() const { return m_TextOptions.lineHeight; }
-	float GetLineLength() const { return m_TextOptions.lineLength; }
+	float GetLineLength() const { return m_TextLength; }
 
 	const std::vector<FullSprite>& GetTextGeometry() const;
 

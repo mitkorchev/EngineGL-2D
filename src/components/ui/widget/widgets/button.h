@@ -23,7 +23,7 @@ public:
 			anchor
 		)
 	{
-		AddChild(std::move(std::make_unique<Label>(text, glm::vec2(5.f, 5.f))));
+		AddChild(std::move(std::make_unique<Label>(text, glm::vec2(0.f, 0.f), Alignment::CENTER, Alignment::CENTER)));
 	}
 
 	virtual void SendOwnRenderData(

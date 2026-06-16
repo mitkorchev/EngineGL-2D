@@ -141,13 +141,19 @@ WidgetLayoutContext WidgetCompositionInterface::CalculatePosition(
 		parentLayoutContext.absoluteOrigin
 		+ parentLayoutContext.dimensions * anchorCoefficients
 		+ m_PositionRelativeToAnchorPoint
-		- m_Dimensions * alignmentCoefficients;
+		- GetDimensions() * alignmentCoefficients;
+
+	const glm::vec2 f1 = parentLayoutContext.absoluteOrigin;
+	const glm::vec2 f2 = parentLayoutContext.dimensions * anchorCoefficients;
+	const glm::vec2 f3 = m_PositionRelativeToAnchorPoint;
+	const glm::vec2 f4 = GetDimensions()* alignmentCoefficients;
+
 
 	//	First we figure out the absolute position of the anchor point based on parent's rect.
 	//	Then we move with position relative to it.
 	//	Finally we adjust based on current widget's alignment around that final position, i.e.
 	//	does that final position point to this widget's center or top left corner and so on.
-	self.dimensions = m_Dimensions;
+	self.dimensions = GetDimensions();
 
 	return self;
 }
