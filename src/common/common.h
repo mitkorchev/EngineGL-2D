@@ -266,6 +266,16 @@ struct Profiler {
     }
 };
 
-
-
 bool PointInRect(const glm::vec2& p, const glm::vec2& pos, const glm::vec2& size);
+
+struct ImageFile {
+    unsigned char* imageData = nullptr;
+    int32_t widthPx = 0;
+    int32_t heightPx = 0;
+
+    void Destroy();
+
+    ~ImageFile() {
+        Destroy();
+    }
+};

@@ -61,10 +61,10 @@ const std::vector<FullSprite>& Text::GetTextGeometry() const {
 }
 
 void Text::CalculateGeometry() const {
-
 	m_TextGeometry.clear();
 	m_HasChanged = false;
     float scale = m_TextOptions.scale;
+    float rightMostCharacterPos = 0.f;
 
     auto AppendGlyph = [&](char32_t ch, float x, float y) {
         GlyphSprite glyph = GetFont()->GetGlyph(ch);
@@ -78,6 +78,11 @@ void Text::CalculateGeometry() const {
 
         self.position.x = x;
         self.position.y = y;
+
+        const float afterCharXposition = self.instance.dimensions.x + x;
+        if (afterCharXposition > rightMostCharacterPos) {
+            rightMostCharacterPos = afterCharXposition;
+        }
 
         m_TextGeometry.emplace_back(self);
 
@@ -94,8 +99,6 @@ void Text::CalculateGeometry() const {
                 0.0f
             );
         }
-
-		return;
 	}
 
     if (m_TextOptions.scrollType == TextScroll::Multiline) {
@@ -191,8 +194,12 @@ void Text::CalculateGeometry() const {
                 CurrentLineLength = 0.0f;
             }
         }
+    }
 
-        return;
+    if (abs(m_TextOptions.lineLength) < FLOAT_COMPARE_TOLERANCE) {
+        m_TextLength = rightMostCharacterPos;
+    } else {
+        m_TextLength = m_TextOptions.lineLength;
     }
 }
 

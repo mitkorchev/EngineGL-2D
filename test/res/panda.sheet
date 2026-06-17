@@ -1,0 +1,11 @@
+img_path="test/res/panda.png"
+params="S repeat T repeat"
+
+name=panda
+shader_name=batch
+
+[nose]
+x=500 y=150 w=50 h=50
+
+[eye]
+x=600 y=150 w=50 h=50

@@ -137,7 +137,7 @@ void ImageBgSkin::CalculateBackgroundGeometry(
 	centerBg.dimensions.y = widgetDimensions.y;
 	OUT_bgGeometryBuffer.emplace_back(
 		centerBg,
-		0,
-		0
+		0.f,
+		0.f
 	);
 }

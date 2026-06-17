@@ -11,13 +11,32 @@
 
 class Window;
 
+enum class Alignment {
+	CENTER = 0,
+	TOP = 1,
+	BOTTOM = 2,
+	LEFT = 3,
+	RIGHT = 4,
+	TOPLEFT = 5,
+	TOPRIGHT = 6,
+	BOTTOMLEFT = 7,
+	BOTTOMRIGHT = 8
+};
+
+struct WidgetLayoutContext {
+	glm::vec2 absoluteOrigin;
+	glm::vec2 dimensions;
+};
+
 class WidgetCompositionInterface {
 
 	std::vector<std::unique_ptr<WidgetCompositionInterface>> m_WidgetComposition;
 
 private:
 
-	glm::vec2 m_PositionRelToParent = glm::vec2(0.f, 0.f);
+	Alignment m_AnchorPoint = Alignment::TOPLEFT;
+	Alignment m_Alignment = Alignment::TOPLEFT;
+	glm::vec2 m_PositionRelativeToAnchorPoint = glm::vec2(0.f, 0.f);
 	glm::vec2 m_Dimensions = glm::vec2(0.f, 0.f);
 
 	bool m_IsHitTestable = true;	//<<< Set to true, very advanced concept
@@ -44,15 +63,19 @@ public:
 	WidgetCompositionInterface() {}
 
 	WidgetCompositionInterface(
-		glm::vec2 offsetRelToParent,
+		glm::vec2 offsetRelToAnchor,
 		glm::vec2 dimensions,
 		const BackgroundSkinInterface* background,
-		bool isInteractable
+		bool isInteractable,
+		Alignment alignment = Alignment::TOPLEFT,
+		Alignment anchor = Alignment::TOPLEFT
 	) :
-		m_PositionRelToParent(offsetRelToParent),
+		m_PositionRelativeToAnchorPoint(offsetRelToAnchor),
 		m_Dimensions(dimensions),
 		m_BackgroundSkin(background),
-		m_IsInteractable(isInteractable)
+		m_IsInteractable(isInteractable),
+		m_Alignment(alignment),
+		m_AnchorPoint(anchor)
 	{
 		if (background) {
 			CalculateBackgroundGeometry();
@@ -60,17 +83,21 @@ public:
 	}
 
 	WidgetCompositionInterface(
-		float xOffsetRelToParent,
-		float yOffsetRelToParent,
+		float xOffsetRelToAnchor,
+		float yOffsetRelToAnchor,
 		float xDimension,
 		float yDimension,
 		const BackgroundSkinInterface* background,
-		bool isInteractable
+		bool isInteractable,
+		Alignment alignment = Alignment::TOPLEFT,
+		Alignment anchor = Alignment::TOPLEFT
 	) :
-		m_PositionRelToParent(xOffsetRelToParent, yOffsetRelToParent),
+		m_PositionRelativeToAnchorPoint(xOffsetRelToAnchor, yOffsetRelToAnchor),
 		m_Dimensions(xDimension, yDimension),
 		m_BackgroundSkin(background),
-		m_IsInteractable(isInteractable)
+		m_IsInteractable(isInteractable),
+		m_Alignment(alignment),
+		m_AnchorPoint(anchor)
 	{
 		if (background) {
 			CalculateBackgroundGeometry();
@@ -93,13 +120,13 @@ public:
 	//	Note: design is smooth except here
 	void RenderWidgetTree(
 		Batch* uiBatch,
-		glm::vec2 absoluteParentOrigin,
+		WidgetLayoutContext absoluteParentLayout,
 		float baseZLayer,
 		float zSubstep
 	);
 
 	WidgetCompositionInterface* DetectClick(
-		glm::vec2 absoluteParentOrigin,
+		WidgetLayoutContext absoluteParentLayout,
 		glm::vec2 mousePosition
 	);
 
@@ -123,14 +150,18 @@ private:
 
 protected:
 
-	glm::vec2 GetAbsolutePosition(
-		glm::vec2 parentOrigin
-	) const;
+	WidgetLayoutContext CalculatePosition(
+		WidgetLayoutContext parentLayoutContext
+	);
 
 public:
 
-	void SetRelPosition(
+	void SetPosRelativeToAnchor(
 		glm::vec2 newPos
+	);
+
+	void SetNewAnchoring(
+		Alignment newAnchorPoint
 	);
 
 	void SetOnClick(

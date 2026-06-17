@@ -59,6 +59,7 @@ void SpriteInformation::SetYCutoff(bool fromTop) {
 	}
 }
 
+//	TODO: make the final uint16 calculation in compile time to remove the float -> int conversion
 unsigned short SpriteInstance::PackRemainFactor(float remainFactor) {
 	return 65535 * remainFactor;
 }
@@ -417,10 +418,11 @@ SpriteInstance Batch::GetSprite(
 			
 			DEBUG_ASSERT(!retVal.IsNull(), "Batch derived bad sprite [%s] from sheet [%s].", _spriteNameWithinSheet, _sheetName);
 
-			break;
+			return retVal;
 		}
 	}
 
+	DEBUG_ASSERT(0, "Batch looked for sprite [%s] in sheet [%s] but found nothing.", _spriteNameWithinSheet, _sheetName);
 	return retVal;
 }
 

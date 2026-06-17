@@ -17,8 +17,7 @@ struct CapturedStates {
 	bool capturedKeyboard = false;
 };
 
-
-class UIManager : public WidgetCompositionInterface{
+class UIManager : public WidgetCompositionInterface {
 	
 	ResourceService* m_ResService = nullptr;
 	InputController* m_InputController = nullptr;

@@ -1,0 +1,10 @@
+//	Path will be appended to the base resource path
+//	params will be split into something more sensible or removed
+img_path="test/res/test.png"
+params="S repeat T repeat"
+
+name=test
+shader_name=batch
+
+[nose]
+x=337 y=469 w=100 h=200

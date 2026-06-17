@@ -64,5 +64,4 @@ struct FullSprite {
 		position.x = x;
 		position.y = y;
 	}
-
 };

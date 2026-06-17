@@ -23,10 +23,7 @@
 class Shader {
 
     unsigned int m_ProgramID = 0;
-
-    
     std::string m_ShaderName;
-
 
 private:    //  UniformName -> UniformLocation map + type 
 
@@ -34,24 +31,18 @@ private:    //  UniformName -> UniformLocation map + type
         int location;
         GLenum type;
     };
-
     
     std::unordered_map<std::string, UniformLocation> m_UniformLocationMap;
-    
 
     void InitialiseUniformLocationMap();
 
-
     std::unordered_map<std::string, unsigned int> m_UniformBlockLocationMap;
 
-
     void InitialiseUniformBlockLocationMap();
-
 
     bool IsUniformBlock(
         const char* _uniformBlockName
     );
-
 
 private:
 
@@ -66,7 +57,6 @@ private:
         "u_Projection"
     };
 
-
     bool IsStandardUniform(
         const char* _uniformName
     );
@@ -75,17 +65,14 @@ public:
 
     Shader() {}
     
-
     Shader(
-        const std::string& _locationShaderFile,
-        const std::string& _shaderName
+        uint32_t programId,
+        const std::string& shaderName
     );
-
 
     void ApplyUniforms(
         const UniformDataVector* _uniformArray
     ) const;
-
 
     unsigned int GetUniformBlockLocation(
         const char* _uniformBlockName
