@@ -34,6 +34,7 @@ void UIManager::InterpretInput(
 
 	//	---		RENDER		---	 //
 
+	//	TODO: MAKE THIS BETTER
 	WidgetLayoutContext uiManagerLayoutContext;
 	uiManagerLayoutContext.absoluteOrigin = glm::vec2(0.f, 0.f);
 	uiManagerLayoutContext.dimensions = GetDimensions();
