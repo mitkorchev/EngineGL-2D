@@ -3,9 +3,10 @@
 #include <memory>
 
 #include "resource_service.h"
-#include "../components/input_controller.h"
+
 #include "../opengl/batch.h"
 
+#include "../components/input_controller.h"
 #include "../components/ui/widget/event_emitter.h"
 #include "../components/ui/widget/widgets/window.h"
 #include "../components/ui/widget/widgets/input.h"

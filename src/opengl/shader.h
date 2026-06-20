@@ -84,16 +84,13 @@ public:
         const glm::mat4& _model
     ) const;
 
-
     void SetStandardView(
         const glm::mat4& _view
     ) const;
 
-
     void SetStandardProjection(
         const glm::mat4& _projection
     ) const;
-
 
     void SetIntArray(
         const char* _uniformName,
@@ -101,37 +98,31 @@ public:
         int _arraySize
     ) const;
 
-
     void SetFloatArray(
         const char* _uniformName,
         const float* _array,
         int _arraySize
     ) const;
 
-
     void SetMat4(
         const char* _uniformName,
         const glm::mat4& _uniformValue
     ) const;
-
 
     void SetFloat(
         const char* _uniformName,
         const float _uniformValue
     ) const;
 
-
     void SetInt(
         const char* _uniformName,
         const int _uniformValue
     ) const;
 
-
     void SetVec2(
         const char* _uniformName,
         const glm::vec2 _uniformValue
     ) const;
-
 
     const void UseShader() const;
 
@@ -141,13 +132,10 @@ public:
         const char* _uniformName
     ) const;
 
-
     const unsigned int GetShaderId() const;
     const std::string& GetName() const;
 
 };
-
-
 
 #define GLCall(x) GLClearError();\
     x;\
@@ -163,4 +151,3 @@ static bool GLLogCall(const char* function, const char* file, int line) {
     }
     return true;
 }
-

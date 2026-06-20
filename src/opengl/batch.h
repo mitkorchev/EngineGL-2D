@@ -4,7 +4,6 @@
 #include "../common/standard_quad.h"
 #include "../components/ui/text.h"
 
-
 static constexpr size_t MIN_SPRITES_WITH_RESERVED_MEM = 50;
 
 class Batch {

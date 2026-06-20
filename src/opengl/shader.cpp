@@ -79,11 +79,6 @@ void Shader::InitialiseUniformLocationMap() {
             }
         }
 
-        if (!strcmp(UniName, "u_Texture")) {
-            int a = 1;
-            a++;
-        }
-
         int BlockIndex;
         glGetActiveUniformsiv(Program, 1, (GLuint*)&i, GL_UNIFORM_BLOCK_INDEX, &BlockIndex);
 

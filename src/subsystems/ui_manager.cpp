@@ -22,11 +22,9 @@ void UIManager::InterpretInput(
 	const int totalLayers = 1 + m_OpenedWindows.size();	//	dont forget UI-manager ui
 	const int totalSublayers = totalLayers * MAXIMUM_NESTED_WIDGETS;
 	
-	
 	const float baseZLayer = m_FurtherBoundOfZLayerDistribution;
 	const float workRange = GetFurtherZBound() - GetCloserZBound();
 	const float substep = - (workRange / float(totalSublayers));
-
 	
 	//	Window in the END of the vector is closest to us.
 	//	We render from bottom to top
@@ -194,13 +192,8 @@ std::unique_ptr<Window> UIManager::GenWindowObject(
 
 	auto self = std::make_unique<Window>(GetNextWindowID(), dimensions, selectedSkin);
 	
-	//	TODO:	perfect usecase for alignment
 	if (haveClosingButton) {
-		glm::vec2 closeBtnPos = dimensions;
-		closeBtnPos.x -= 20 + 4;	//	TODO:	HARDCODED DIMENSIONS OF CLOSING BUTTON	
-		closeBtnPos.y = 4;			//	TODO:	HARDCODED PADDING FOR CLOSING BUTTON
-
-		auto closeBtn = std::make_unique<TextlessButton>(closeBtnPos, glm::vec2(20.f, 20.f), GetResService()->GetCloseBtnBgSkin());
+		auto closeBtn = std::make_unique<TextlessButton>(glm::vec2(-4.f, +4.f), glm::vec2(20.f, 20.f), GetResService()->GetCloseBtnBgSkin(), Alignment::TOPRIGHT, Alignment::TOPRIGHT);
 		closeBtn.get()->SetOnClick([](UI_EVENT_CONTEXT_PARAMS) {
 			Event self;
 			self.type = EventType::CLOSE_WINDOW;

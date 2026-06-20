@@ -11,7 +11,6 @@ uniforms without re-writing the whole Renderer2D class.
 
 */
 
-
 using UniformValue = std::variant<
 	int,
 	float,

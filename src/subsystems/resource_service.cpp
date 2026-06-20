@@ -55,15 +55,9 @@ void ResourceService::UploadSpriteSheetParameters(
 }
 
 void ResourceService::StartLoadingProcess() {
-	m_Shaders.clear();
-	m_Sheets.clear();
-
 	LoadShaders();
-
 	LoadSpriteSheets();
-
 	LoadFonts();
-
 	LoadDefaultVariables();
 }
 
@@ -163,6 +157,7 @@ void ResourceService::UploadFontParameters(
 
 void ResourceService::LoadFonts() {
 	m_Fonts.clear();
+	m_Fonts.reserve(m_FontLoadQueue.size());
 
 	for (size_t i = 0; i < m_FontLoadQueue.size(); i++) {
 		FontLoadingParameters params = m_FontLoadQueue[i];
@@ -451,7 +446,7 @@ static ShaderProgramSources ParseShader(const std::string& filepath) {
 	std::ifstream stream(filepath);
 	DEBUG_ASSERT(stream.is_open(), "Failed to open shader file: %s", filepath.c_str())
 
-		enum class ShaderType {
+	enum class ShaderType {
 		NONE = -1, VERTEX = 0, FRAGMENT = 1
 	};
 
@@ -481,7 +476,6 @@ static ShaderProgramSources ParseShader(const std::string& filepath) {
 }
 
 static unsigned int CompileShader(unsigned int type, const std::string& source) {
-
 	unsigned int id = glCreateShader(type);
 	const char* src = source.c_str();
 	glShaderSource(id, 1, &src, nullptr);
@@ -504,7 +498,6 @@ static unsigned int CompileShader(unsigned int type, const std::string& source) 
 }
 
 static unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader) {
-
 	unsigned int program = glCreateProgram();
 	unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
 	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
@@ -522,6 +515,7 @@ static unsigned int CreateShader(const std::string& vertexShader, const std::str
 
 void ResourceService::LoadShaders() {
 	m_Shaders.clear();
+	m_Shaders.reserve(m_ShaderLoadQueue.size());
 
 	for (const auto& params : m_ShaderLoadQueue) {
 		std::string fullPathToShader = GetAbsolutePathForAsset(params.m_LocationOfShaderFile.c_str());

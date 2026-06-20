@@ -59,7 +59,6 @@ void SpriteInformation::SetYCutoff(bool fromTop) {
 	}
 }
 
-//	TODO: make the final uint16 calculation in compile time to remove the float -> int conversion
 unsigned short SpriteInstance::PackRemainFactor(float remainFactor) {
 	return 65535 * remainFactor;
 }
@@ -99,8 +98,6 @@ void SpriteInstance::SetYCutPixels(float pixelsToCut, bool cutFromTop) {
 	dimensions.y -= pixelsToCut;
 	SetYCut(remainFactor, cutFromTop);
 }
-
-
 
 unsigned int Batch::c_NotInitialised = 1 << 0;
 unsigned int Batch::c_MaximumInstanceCountExceeded = 1 << 16;
