@@ -1,5 +1,4 @@
 #include "ui_manager.h"
-#include <print>
 
 void UIManager::SetZSpaceDistribution(
 	float zClose,
@@ -13,8 +12,6 @@ void UIManager::InterpretInput(
 	float elapsedTimeSeconds
 ) {
 	GameInput& input = GetInput()->ExposeGameInput();
-
-	/* process keyboard here */
 
 	Batch* uiBatch = GetResService()->GetUIBatch();
 
@@ -50,7 +47,6 @@ void UIManager::InterpretInput(
 	}
 
 	if (input.IsPressed(GLFW_MOUSE_BUTTON_LEFT) || input.IsPressed(GLFW_KEY_ESCAPE)) {
-		std::println("Focus released");
 		m_FocusedInputField = nullptr;
 	}
 
@@ -172,7 +168,6 @@ void UIManager::EnforceUIEvents() {
 		}
 		case EventType::SET_FOCUS_ON_INPUT: {
 			m_FocusedInputField = event.setInputFocusEvent.targetInputPointer;
-			std::println("Focus set");
 		}
 		}
 	}

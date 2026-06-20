@@ -194,4 +194,6 @@ public:
 	const int GetSpriteSheetHeight() const { return m_SheetHeight; }
 	void DestroyGLTextureObject();
 
+	~SpriteSheet();
+
 };

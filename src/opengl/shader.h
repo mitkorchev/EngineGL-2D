@@ -135,6 +135,8 @@ public:
     const unsigned int GetShaderId() const;
     const std::string& GetName() const;
 
+    ~Shader();
+
 };
 
 #define GLCall(x) GLClearError();\

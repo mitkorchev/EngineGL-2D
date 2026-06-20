@@ -499,11 +499,6 @@ void Batch::InitialiseCommonVAO() {
 	glVertexAttribBinding(6, 2);
 	glEnableVertexAttribArray(6);
 
-	//	Z coord	(ignored in regular render)
-	glVertexAttribFormat(6, 1, GL_FLOAT, GL_FALSE, offsetof(FullSprite, z));
-	glVertexAttribBinding(6, 2);
-	glEnableVertexAttribArray(6);
-
 	//	Cut values
 	glVertexAttribIFormat(7, 2, GL_UNSIGNED_SHORT, offsetof(FullSprite, instance) + offsetof(SpriteInstance, xCut));
 	glVertexAttribBinding(7, 2);

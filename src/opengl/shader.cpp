@@ -278,3 +278,9 @@ void Shader::SetVec2(
 
 const std::string& Shader::GetName() const { return m_ShaderName; }
 const unsigned int Shader::GetShaderId() const { return m_ProgramID; }
+
+Shader::~Shader() {
+    if (m_ProgramID) {
+        glDeleteProgram(m_ProgramID);
+    }
+}
