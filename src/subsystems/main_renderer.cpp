@@ -1,6 +1,5 @@
 ﻿#include "main_renderer.h"
 
-
 void Renderer2D::Draw(
 	Batch* _batch,
 	float _xPosition,
@@ -33,11 +32,7 @@ void Renderer2D::ExecuteDraws() {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//	-- RENDERING STARTS --	//
-
 	RenderBatches();
-
-	//	-- RENDERING ENDS	--	//
 
 	glfwSwapBuffers(GetWinHandle());
 }

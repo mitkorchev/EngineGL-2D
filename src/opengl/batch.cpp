@@ -59,7 +59,6 @@ void SpriteInformation::SetYCutoff(bool fromTop) {
 	}
 }
 
-//	TODO: make the final uint16 calculation in compile time to remove the float -> int conversion
 unsigned short SpriteInstance::PackRemainFactor(float remainFactor) {
 	return 65535 * remainFactor;
 }
@@ -99,8 +98,6 @@ void SpriteInstance::SetYCutPixels(float pixelsToCut, bool cutFromTop) {
 	dimensions.y -= pixelsToCut;
 	SetYCut(remainFactor, cutFromTop);
 }
-
-
 
 unsigned int Batch::c_NotInitialised = 1 << 0;
 unsigned int Batch::c_MaximumInstanceCountExceeded = 1 << 16;
@@ -496,11 +493,6 @@ void Batch::InitialiseCommonVAO() {
 	glVertexAttribFormat(5, 2, GL_FLOAT, GL_FALSE, offsetof(FullSprite, instance) + offsetof(SpriteInstance, dimensions));
 	glVertexAttribBinding(5, 2);
 	glEnableVertexAttribArray(5);
-
-	//	Z coord	(ignored in regular render)
-	glVertexAttribFormat(6, 1, GL_FLOAT, GL_FALSE, offsetof(FullSprite, z));
-	glVertexAttribBinding(6, 2);
-	glEnableVertexAttribArray(6);
 
 	//	Z coord	(ignored in regular render)
 	glVertexAttribFormat(6, 1, GL_FLOAT, GL_FALSE, offsetof(FullSprite, z));

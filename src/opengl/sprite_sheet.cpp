@@ -305,3 +305,9 @@ void SpriteSheet::RowColMethod(
 		for (int x = 0; x < m_SpriteCountPerRow; x++)
 			WriteData(x, y);
 }
+
+SpriteSheet::~SpriteSheet() {
+	if (m_TextureBufferID) {
+		glDeleteTextures(1, &m_TextureBufferID);
+	}
+}

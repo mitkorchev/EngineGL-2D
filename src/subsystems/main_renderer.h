@@ -5,12 +5,11 @@
 
 #include "resource_service.h"
 
+#include "../opengl/batch.h"
+
 #include "../components/camera.h"
 #include "../components/input_controller.h"
 #include "../components/file_handler.h"
-
-#include "../opengl/batch.h"
-
 #include "../components/ui/text.h"
 
 struct RenderCommand {
@@ -104,7 +103,6 @@ public:		//	Exposed functions
 
 	Renderer2D() {}
 
-	
 	Renderer2D(
 		GLFWwindow* _initialisedWindow,
 		int _screenWidth,
@@ -112,7 +110,6 @@ public:		//	Exposed functions
 		const char* _windowTitle,
 		bool _fullscreen = false
 	);
-
 	
 	//	Initialise window and global variables.
 	//	Returns false on fail.
@@ -145,9 +142,7 @@ public:
 	GLFWwindow*			GetWinHandle() const { return m_MainWindowHandle; }	// always required to be non-const
 	Camera&				GetCamera() { return m_Camera; }
 
-
 	const Camera&			GetCamera() const { return m_Camera; }
-
 
 	const InputController* GetInput() const { return m_InputController; }
 	const ResourceService* GetResources() const { return m_ResService; }

@@ -123,17 +123,3 @@ void Engine2D::ExecuteFrame() {
 	auto end = Clock::now();
 	m_ElapsedTimeSeconds = std::chrono::duration<float>(end - start).count();
 }
-
-/*
-remaining:
-	cyrillic graphic
-	UI ergonomics like auto centering of text within a button
-	colour palette-dependant sprites
-	playing of sounds
-
-	font file chars are in this order:
-	АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЬЮЯЍ
-	абвгдежзийклмнопрстуфхцчшщъьюяѝ
-	0123456789
-	 .,+-!?;:&><#/
-*/

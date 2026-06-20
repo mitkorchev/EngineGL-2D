@@ -7,8 +7,6 @@
 *	SpriteSheet		- an image subdivided in N x M uniform regions
 *	Sprite index	- subregions in the sprite sheet are indexed 
 *					  left to right, top to bottom, starting from 0
-*	
-* 
 */
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -59,7 +57,6 @@ struct alignas(float) UVRegion {
 
 	void* GetData() { return this; }
 	bool operator==(const UVRegion& other) const;
-
 };
 
 enum class SpriteSheetType {
@@ -140,10 +137,6 @@ public:
 		const char* _spriteName
 	) const;
 
-private:	//	Private getters 
-
-	//const UVRegion* GetUVRegionArray() const { return m_UVregionsFromConfigFile.data(); }
-
 private:
 
 	void SpriteListMethod(
@@ -195,14 +188,12 @@ public:
 	int GetSheetRowSpriteCount() const { return m_SpriteCountPerRow; }
 	unsigned int GetTextureBufferID() const { return m_TextureBufferID; }
 	const TextureParamsDataStruct& GetTexParams() const { return m_TexParams; }
-
 	const std::vector<UVRegion>& GetUVRegionArray() const { return m_UVregionsFromConfigFile; }
-
 	const int GetContainedSpriteCount() const { return static_cast<int>(m_UVregionsFromConfigFile.size()); }
-
 	const int GetSpriteSheetWidth() const { return m_SheetWidth; }
 	const int GetSpriteSheetHeight() const { return m_SheetHeight; }
-
 	void DestroyGLTextureObject();
+
+	~SpriteSheet();
 
 };

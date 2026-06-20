@@ -9,3 +9,7 @@ Sample code will be included in the future in a special folder with examples.
 This project requires the following to begin the build process:
 - CMake(minimum version 3.20).
 - vcpkg
+
+Planned features remaining:
+- colour palette sprites(possible, but not sure it's needed for now)
+- playing sounds

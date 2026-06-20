@@ -1,9 +1,9 @@
 #pragma once
 
 #include "../opengl/batch.h"
-
 #include "../opengl/shader.h"
 #include "../opengl/sprite_sheet.h"
+
 #include "../components/ui/font.h"
 #include "../components/ui/widget/widget_interface.h"
 

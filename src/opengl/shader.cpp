@@ -79,11 +79,6 @@ void Shader::InitialiseUniformLocationMap() {
             }
         }
 
-        if (!strcmp(UniName, "u_Texture")) {
-            int a = 1;
-            a++;
-        }
-
         int BlockIndex;
         glGetActiveUniformsiv(Program, 1, (GLuint*)&i, GL_UNIFORM_BLOCK_INDEX, &BlockIndex);
 
@@ -283,3 +278,9 @@ void Shader::SetVec2(
 
 const std::string& Shader::GetName() const { return m_ShaderName; }
 const unsigned int Shader::GetShaderId() const { return m_ProgramID; }
+
+Shader::~Shader() {
+    if (m_ProgramID) {
+        glDeleteProgram(m_ProgramID);
+    }
+}
